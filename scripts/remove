@@ -1,23 +1,24 @@
 #!/bin/bash
 
-db_user=openphoto
-db_name=openphoto
+app_name=openphoto
+db_user=$app_name
+db_name=$app_name
 root_pwd=$(sudo cat /etc/yunohost/mysql)
-domain=$(sudo yunohost app setting openphoto domain)
+domain=$(sudo yunohost app setting $app_name domain)
 
 mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
-sudo rm -rf /var/www/openphoto
-sudo rm -rf /home/yunohost.app/openphoto
-sudo rm -f /etc/nginx/conf.d/$domain.d/openphoto.conf
-sudo rm -f /etc/php5/fpm/pool.d/openphoto.conf
-sudo rm -f /etc/php5/conf.d/20-openphoto.ini
+sudo rm -rf /var/www/$app_name
+sudo rm -rf /home/yunohost.app/$app_name
+sudo rm -f /etc/nginx/conf.d/$domain.d/$app_name.conf
+sudo rm -f /etc/php5/fpm/pool.d/$app_name.conf
+sudo rm -f /etc/php5/conf.d/20-$app_name.ini
 for i in $(ls /home)
 do
     if [[ ! $i == yunohost.* ]];
     then
-        sudo setfacl -x g:openphoto:rwx > /dev/null 2>&1
+        sudo setfacl -x g:$app_name:rwx > /dev/null 2>&1
     fi
 done
 sudo service php5-fpm restart
-sudo userdel openphoto > /dev/null 2>&1
+sudo userdel $app_name > /dev/null 2>&1
 sudo service nginx reload
