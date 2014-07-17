@@ -30,16 +30,16 @@ sudo pecl install oauth
 sudo bash -c 'echo "extension=oauth.so" >> /etc/php5/conf.d/oauth.ini'
 
 # Copy files to the right place
-final_path=/var/www/$app_name/
+final_path=/var/www/$app_name
 sudo mkdir -p $final_path
 git clone git://github.com/photo/frontend.git /tmp/openphoto
-sudo mv /tmp/openphoto/src/* $final_path
-sudo rm -rf /tmp/openphoto/
+sudo mv -- /tmp/openphoto/src/* $final_path/
+sudo rm -rf -- /tmp/openphoto/
 
 # Set permissions to $app_name directory
 sudo useradd $app_name -d $final_path
-sudo mkdir -p $final_path/logs
-sudo chown -R $app_name:www-data $final_path
+sudo mkdir -p -- $final_path/logs
+sudo chown -R -- $app_name:www-data $final_path
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
